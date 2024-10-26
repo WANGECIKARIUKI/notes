@@ -149,6 +149,13 @@ body {
   background-color: #FF4500; /* Red */
 }
 
+.note-created-at {
+  font-size: 0.9em; /* Smaller font for the date */
+  color: #666; /* Gray color */
+  margin-top: 5px; /* Space above the date */
+}
+
+
 
 @media (max-width: 480px) {
   .notepad-input, .notepad-button {

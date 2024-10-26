@@ -21,7 +21,7 @@ function Notepad() {
 
   const addNote = () => {
     if (newNote.title && newNote.content) { // Ensure title and content are not empty
-      setNotes([...notes, { ...newNote, id: Date.now() }]); // Add a new note with a unique ID
+      setNotes([...notes, { ...newNote, id: Date.now(), createdAt: new Date() }]); // Add createdAt
       setNewNote({ title: '', content: '' }); // Reset the new note input
     }
   };
@@ -93,6 +93,7 @@ function Notepad() {
             style={{ borderColor: currentTheme.borderColor }}
           >
             <h3 className="note-folder-title" onClick={() => editNote(note)}>{note.title}</h3>
+            <p className="note-created-at">{note.createdAt.toLocaleDateString()}</p> {/* Display creation date */}
             <button onClick={() => deleteNote(note.id)}>Delete</button>
           </div>
         ))}
