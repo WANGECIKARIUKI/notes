@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './Notepad.css'; // Import CSS
@@ -18,6 +18,41 @@ function Notepad() {
   const [newNote, setNewNote] = useState({ title: '', content: '' });
   const [selectedNote, setSelectedNote] = useState(null);
   const [currentTheme, setCurrentTheme] = useState(colorThemes[0]); // Default theme
+
+  // Load data from localStorage with error handling
+  useEffect(() => {
+    const storedNotes = loadFromLocalStorage('notes', []);
+    const storedTheme = loadFromLocalStorage('currentTheme', colorThemes[0]);
+    setNotes(storedNotes);
+    setCurrentTheme(storedTheme);
+  }, []);
+
+  // Save notes and theme to localStorage
+  useEffect(() => {
+    saveToLocalStorage('notes', notes);
+  }, [notes]);
+
+  useEffect(() => {
+    saveToLocalStorage('currentTheme', currentTheme);
+  }, [currentTheme]);
+
+  const loadFromLocalStorage = (key, defaultValue) => {
+    try {
+      const data = localStorage.getItem(key);
+      return data ? JSON.parse(data) : defaultValue;
+    } catch (error) {
+      console.error('Error loading from localStorage:', error);
+      return defaultValue;
+    }
+  };
+
+  const saveToLocalStorage = (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+  };
 
   const addNote = () => {
     if (newNote.title && newNote.content) { // Ensure title and content are not empty
@@ -93,7 +128,7 @@ function Notepad() {
             style={{ borderColor: currentTheme.borderColor }}
           >
             <h3 className="note-folder-title" onClick={() => editNote(note)}>{note.title}</h3>
-            <p className="note-created-at">{note.createdAt.toLocaleDateString()}</p> {/* Display creation date */}
+            <p className="note-created-at">{new Date(note.createdAt).toLocaleDateString()}</p> {/* Display creation date */}
             <button onClick={() => deleteNote(note.id)}>Delete</button>
           </div>
         ))}
